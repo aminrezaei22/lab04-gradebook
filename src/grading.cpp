@@ -39,18 +39,29 @@ double classAverage(const ScoreGrid& scores) {
     return total / (STUDENT_COUNT * ASSIGNMENT_COUNT);
 }
 
-void findExtremes(const ScoreGrid& scores, int studentIndex,
-                  double& lowest, double& highest) {
-    // Start from a real score so the result is correct for any range of
-    // values, including all-negative ones
-    lowest = scores[studentIndex][0];
-    highest = scores[studentIndex][0];
+void findClassExtremes(const ScoreGrid& scores,
+                       double& lowest, double& highest,
+                       int& lowestStudent, int& highestStudent) {
+    lowest = scores[0][0];
+    highest = scores[0][0];
+    lowestStudent = 0;
+    highestStudent = 0;
 
-    for (auto i{1}; i < ASSIGNMENT_COUNT; i++) {
-        lowest = std::min(lowest, scores[studentIndex][i]);
-        highest = std::max(highest, scores[studentIndex][i]);
+    for (auto i{0}; i < STUDENT_COUNT; i++) {
+        for (auto j{0}; j < ASSIGNMENT_COUNT; j++) {
+            if (scores[i][j] < lowest) {
+                lowest = scores[i][j];
+                lowestStudent = i;
+            }
+
+            if (scores[i][j] >= highest) {
+                highest = scores[i][j];
+                highestStudent = i;
+            }
+        }
     }
 }
+
 
 int countGrade(const ScoreGrid& scores, char target) {
     int count{};
